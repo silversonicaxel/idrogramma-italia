@@ -21,7 +21,10 @@ export default function StationPanel({ station, onClose }: Props) {
 
   // (re)disegna il grafico a ogni stazione selezionata
   useEffect(() => {
-    if (!chartRef.current) return;
+    // catturo il nodo DOM in una locale: all'unmount React ha già messo
+    // chartRef.current = null, e purge(null) crasherebbe (pagina bianca)
+    const div = chartRef.current;
+    if (!div) return;
     const serie = station.serie ?? [];
     const tracce: unknown[] = [
       {
@@ -42,8 +45,8 @@ export default function StationPanel({ station, onClose }: Props) {
         line: { color: '#66c2a5', dash: 'dot' },
       });
     }
-    Plotly.react(chartRef.current, tracce, LAYOUT, { responsive: true });
-    return () => Plotly.purge(chartRef.current!);
+    Plotly.react(div, tracce, LAYOUT, { responsive: true });
+    return () => Plotly.purge(div);
   }, [station]);
 
   const classe = classeStazione(station);
