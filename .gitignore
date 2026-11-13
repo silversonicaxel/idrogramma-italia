@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+idrogramma.db-wal
+idrogramma.db-shm
+.DS_Store

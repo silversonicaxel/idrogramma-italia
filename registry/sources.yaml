@@ -1,0 +1,50 @@
+# Registro delle fonti dati. Documentazione + stato di abilitazione.
+# Il binding source_id -> classe Connector vive in pipeline.py:REGISTRY.
+
+sources:
+  - id: er
+    regione: Emilia-Romagna
+    ente: Arpae / AllertaMeteo Regione ER
+    tipo: json
+    stato: attivo
+    endpoints:
+      valori_sensori: >-
+        https://allertameteo.regione.emilia-romagna.it/o/api/allerta/get-sensor-values
+        ?variabile=254,0,0/1,-,-,-/B13215&time={epoch_ms_slot_15min}
+      serie_stazione: >-
+        https://allertameteo.regione.emilia-romagna.it/o/api/allerta/get-time-series/
+        ?stazione={idstazione}&variabile=254,0,0/1,-,-,-/B13215
+    note: >
+      Endpoint non documentato ufficialmente (la guida /sviluppatori copre solo le
+      allerte), ricavato dal traffico del portale. Senza il parametro time
+      (epoch ms arrotondato a 15 minuti) i value arrivano tutti null. Coordinate
+      come gradi decimali x100000. Incluse anche stazioni lago/diga: da filtrare.
+    licenza: dati Arpae, citare la fonte
+
+  - id: ve
+    regione: Veneto
+    ente: ARPAV
+    tipo: xml
+    stato: da fare
+    note: feed open data rete idrometrica (~146 stazioni)
+
+  - id: tn
+    regione: Trentino
+    ente: MeteoTrentino / dati.trentino.it
+    tipo: csv/ckan
+    stato: da fare
+
+  - id: dpc
+    regione: nazionale
+    ente: Dipartimento Protezione Civile
+    tipo: json (github)
+    stato: da fare
+    endpoints:
+      bollettini: https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica
+
+  - id: glofas
+    regione: nazionale (baseline storica)
+    ente: Copernicus EMS
+    tipo: api
+    stato: da fare
+    note: rianalisi portate 1991-oggi, baseline percentili dove manca l'osservato
