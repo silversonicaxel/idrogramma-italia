@@ -1,4 +1,4 @@
-name: harvest
+name: harvest # scheduler re-registration nudge
 on:
   schedule:
     - cron: "*/30 * * * *"   # nota: GitHub può ritardare alcuni minuti
