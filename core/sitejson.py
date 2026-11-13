@@ -9,7 +9,8 @@ from pathlib import Path
 from .status import classify_percentile, classify_soglie
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT / "site" / "data"
+# i JSON finiscono negli asset statici del frontend SvelteKit (copiati in build/)
+DATA_DIR = ROOT / "frontend" / "static" / "data"
 SERIES_DAYS = 7
 
 

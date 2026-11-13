@@ -7,3 +7,6 @@ idrogramma.db-shm
 .DS_Store
 # nota: idrogramma.db VIENE committato volutamente: nello skeleton è la
 # persistenza tra i run di Actions (in produzione si passa a Cloudflare D1).
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/

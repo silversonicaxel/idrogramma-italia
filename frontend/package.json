@@ -1,0 +1,26 @@
+{
+  "name": "idrogramma-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "maplibre-gl": "^4.7.1",
+    "plotly.js-basic-dist-min": "^2.35.2"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.20.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@types/node": "^26.6.6",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.7.8",
+    "typescript": "~5.9",
+    "vite": "^6.0.0"
+  }
+}

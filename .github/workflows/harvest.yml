@@ -23,7 +23,7 @@ jobs:
         run: |
           git config user.name "idrogramma-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add idrogramma.db site/data
+          git add idrogramma.db frontend/static/data
           if git diff --cached --quiet; then
             echo "nessun dato nuovo"
           else
