@@ -19,7 +19,10 @@ python pipeline.py            # harvest + build dei JSON del sito
 python pipeline.py nightly    # ricalcolo percentili (job notturno)
 pytest                        # golden test dei connector (fixture reali)
 
-python -m http.server -d site 8000   # il sito è in http://127.0.0.1:8000
+# frontend React 19 + Vite (in frontend/):
+npm install
+npm run dev                   # sviluppo con HMR
+npm run build && npm run preview -- --port 8000   # build statica in frontend/dist/
 ```
 
 ## Architettura
@@ -29,7 +32,7 @@ connectors/   una classe per fonte — l'UNICA parte di codice per-regione
 registry/     sources.yaml: fonti note, endpoint, abilitazione
 core/         db · percentiles · status · sitejson (condiviso, region-agnostic)
 db/           schema.sql (SQLite in locale, Cloudflare D1 in produzione)
-site/         statico: MapLibre (tiles OpenFreeMap) + Plotly.js
+frontend/     React 19 + Vite + TypeScript (MPA), build statica in dist/
 pipeline.py   entrypoint: harvest | nightly | build
 ```
 
