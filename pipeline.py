@@ -55,7 +55,7 @@ def build() -> None:
     con = db.connect()
     sitejson.build(con)
     con.close()
-    print("site/data/ aggiornato")
+    print("frontend/static/data/ aggiornato")
 
 
 if __name__ == "__main__":
