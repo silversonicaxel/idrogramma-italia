@@ -6,7 +6,7 @@ storica dello stesso periodo dell'anno. Due estremi, un solo strumento:
 
 ## Stato
 
-Scheletro funzionante: pipeline Emilia-Romagna ( fonte AllertaMeteo/Arpae ),
+Scheletro funzionante: pipeline Emilia-Romagna (fonte AllertaMeteo/Arpae),
 DB SQLite, motore percentili/soglie, sito statico MapLibre + Plotly.
 
 ## Quickstart
@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 python pipeline.py            # harvest + build dei JSON del sito
 python pipeline.py nightly    # ricalcolo percentili (job notturno)
-pytest                        # test dei connector (golden test su fixture reali)
+pytest                        # golden test dei connector (fixture reali)
 
 python -m http.server -d site 8000   # il sito è in http://127.0.0.1:8000
 ```
@@ -27,7 +27,7 @@ python -m http.server -d site 8000   # il sito è in http://127.0.0.1:8000
 ```
 connectors/   una classe per fonte — l'UNICA parte di codice per-regione
 registry/     sources.yaml: fonti note, endpoint, abilitazione
-core/         normalize · percentiles · status · sitejson (condiviso, region-agnostic)
+core/         db · percentiles · status · sitejson (condiviso, region-agnostic)
 db/           schema.sql (SQLite in locale, Cloudflare D1 in produzione)
 site/         statico: MapLibre (tiles OpenFreeMap) + Plotly.js
 pipeline.py   entrypoint: harvest | nightly | build
@@ -62,13 +62,3 @@ livello idrometrico. Dati forniti da Arpae — citare sempre la fonte.
 - [ ] soglie di magra per-regione (le soglie 1/2/3 sono solo anti-piena)
 - [ ] baseline storica nazionale GloFAS (rianalisi Copernicus)
 - [ ] connector: Veneto (ARPAV XML), Trentino (CKAN), DPC bollettini
-
-## Licenza
-
-- **Codice**: GNU AGPL-3.0 — vedi [LICENSE](LICENSE). Copyleft forte,
-  valido anche per il web: chi esegue una versione modificata come
-  servizio online deve rilasciarne le modifiche con la stessa licenza.
-- **Dati generati** (`site/data/`): CC-BY 4.0 — vedi [LICENSE-data](LICENSE-data).
-  Riutilizzo libero con attribuzione.
-- I **dati di origine** restano delle fonti (Arpae, Protezione Civile, ecc.):
-  nessuna esclusiva, citare sempre la catena — es. *"dati Arpae, via Idrogramma"*.

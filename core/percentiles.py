@@ -1,8 +1,8 @@
 """Ricalcolo notturno dei percentili: stazione x giorno dell'anno.
 
-Media giornaliera dei livelli, finestra +-7 giorni attorno al giorno
+Media giornaliera dei livelli, finestra ±7 giorni attorno al giorno
 dell'anno (con wrap a cavallo di fine anno), quantili al 5%.
-Serve storia: finche' il backfill non c'e', la tabella resta vuota e
+Serve storia: finché il backfill non c'è, la tabella resta vuota e
 il sito mostra solo le soglie regionali.
 
 TODO roadmap: giorno idrologico su fuso Roma (qui si usa il giorno UTC).

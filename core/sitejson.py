@@ -15,8 +15,9 @@ SERIES_DAYS = 7
 
 def build(con: sqlite3.Connection) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
 
-    doy = datetime.now(timezone.utc).timetuple().tm_yday
+    doy = now.timetuple().tm_yday
     pct_by_station = {
         (r["source"], r["station_id"]): r
         for r in con.execute("SELECT * FROM percentiles WHERE doy=?", (doy,))
@@ -33,9 +34,7 @@ def build(con: sqlite3.Connection) -> None:
         )
     }
     series: dict[tuple[str, str], list] = {}
-    since = (datetime.now(timezone.utc) - timedelta(days=SERIES_DAYS)).strftime(
-        "%Y-%m-%dT%H:%M:%SZ"
-    )
+    since = (now - timedelta(days=SERIES_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     for r in con.execute(
         "SELECT source, station_id, ts, level_m FROM readings "
         "WHERE ts >= ? AND level_m IS NOT NULL ORDER BY ts",
@@ -46,7 +45,16 @@ def build(con: sqlite3.Connection) -> None:
         )
 
     stations_out = []
-    for st in con.execute("SELECT * FROM stations ORDER BY name"):
+    soglie_query = """
+        SELECT s.*, t.soglia1, t.soglia2, t.soglia3
+        FROM stations s
+        LEFT JOIN thresholds t
+          ON t.source = s.source AND t.station_id = s.station_id
+         AND t.ts = (SELECT MAX(ts) FROM thresholds t2
+                     WHERE t2.source = s.source AND t2.station_id = s.station_id)
+        ORDER BY s.name
+    """
+    for st in con.execute(soglie_query):
         key = (st["source"], st["station_id"])
         last = latest.get(key)
         pct = pct_by_station.get(key)
@@ -77,7 +85,7 @@ def build(con: sqlite3.Connection) -> None:
 
     (DATA_DIR / "stations.json").write_text(
         json.dumps(
-            {"generato": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            {"generato": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
              "stazioni": stations_out},
             ensure_ascii=False,
         )

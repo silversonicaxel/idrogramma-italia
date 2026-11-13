@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dati aggiornati — Idrogramma Italia</title>
+<link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body>
+<header>
+  <div class="titolo">
+    <h1>Idrogramma Italia</h1>
+    <p>dati aggiornati — stato delle fonti e ultime letture</p>
+  </div>
+  <details class="menu">
+    <summary aria-label="menu">☰</summary>
+    <nav>
+      <a href="../">Mappa</a>
+      <a href="./" aria-current="page">Dati aggiornati</a>
+    </nav>
+  </details>
+</header>
+
+<main class="pagina">
+  <h2>Fonti</h2>
+  <table id="t-fonti">
+    <thead>
+      <tr><th>fonte</th><th>ultimo run</th><th>ultima lettura ricevuta</th>
+        <th class="num">letture</th><th>stato</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Stazioni</h2>
+  <p><input type="search" id="filtro" placeholder="filtra per nome stazione…" autofocus></p>
+  <table id="t-stazioni">
+    <thead>
+      <tr><th>stazione</th><th class="num">livello (m)</th><th>aggiornato</th>
+        <th>stato</th><th>soglie 1/2/3 (m)</th><th>fonte</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<footer>Idrogramma Italia · dati Arpae/AllertaMeteo Regione Emilia-Romagna ·
+questo sito non è un sistema ufficiale di allerta</footer>
+
+<script src="dati.js?v=2"></script>
+</body>
+</html>

@@ -9,10 +9,6 @@ Protezione Civile regionale". Entrambe, mai una sola.
 """
 from __future__ import annotations
 
-PERCENTILE_CLASSES = [
-    "magra_estrema", "magra", "norma", "piena", "piena_estrema",
-]
-
 LABELS = {
     "magra_estrema": "magra estrema",
     "magra": "magra",

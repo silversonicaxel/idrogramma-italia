@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idrogramma Italia</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="style.css?v=2">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="titolo">
+    <h1>Idrogramma Italia</h1>
+    <p>lo stato dei fiumi italiani — livello di oggi vs storia dello stesso periodo</p>
+  </div>
+  <details class="menu">
+    <summary aria-label="menu">☰</summary>
+    <nav>
+      <a href="/" aria-current="page">Mappa</a>
+      <a href="dati-aggiornati/">Dati aggiornati</a>
+    </nav>
+  </details>
+</header>
+
+<div id="contenitore-mappa">
+  <div id="mappa"></div>
+
+  <div id="legenda">
+    <span class="gruppo" title="il livello di oggi confrontato con i livelli degli stessi giorni degli ultimi 20-30 anni. Attivo dopo il caricamento dello storico.">rispetto agli anni scorsi (stesso periodo):</span>
+    <span title="più basso del 95% degli anni scorsi, stesso periodo"><i style="background:#b2182b"></i>magra estrema</span>
+    <span title="più basso del 90-95% degli anni scorsi"><i style="background:#ef8a62"></i>magra</span>
+    <span title="dentro la fascia normale degli anni scorsi (10°-90° percentile)"><i style="background:#66c2a5"></i>nella norma</span>
+    <span title="più alto del 90-95% degli anni scorsi"><i style="background:#67a9cf"></i>piena</span>
+    <span title="più alto del 95% degli anni scorsi, stesso periodo"><i style="background:#2166ac"></i>piena estrema</span>
+    <span class="divisore"></span>
+    <span class="gruppo" title="tre livelli fissi fissati dalla Protezione Civile regionale: superarli scatta l'allerta alluvione. Non esistono soglie ufficiali di magra.">allerta piena (soglie ufficiali):</span>
+    <span title="oltre la soglia di attenzione"><i style="background:#fecc5c"></i>soglia 1</span>
+    <span title="oltre la soglia di pregiudizio"><i style="background:#d95f02"></i>soglia 2</span>
+    <span title="oltre la soglia di emergenza"><i style="background:#7f0000"></i>soglia 3</span>
+    <span class="divisore"></span>
+    <span title="la stazione trasmette e il livello è sotto tutte le soglie di piena; il confronto con gli anni scorsi non è ancora disponibile"><i style="background:#7f8c8d"></i>nessuna allerta</span>
+    <span title="nessuna lettura nelle ultime ore"><i style="background:#cfd8dc"></i>senza dati</span>
+    <span class="divisore"></span>
+    <span title="livello negativo: più basso del riferimento fisso della stazione — secca oggettiva, visibile già oggi senza storico"><i class="anello"></i>sotto lo zero idrometrico</span>
+  </div>
+
+  <aside id="pannello" hidden>
+    <button id="chiudi" title="chiudi">×</button>
+    <h2 id="p-nome"></h2>
+    <div id="p-info"></div>
+    <div id="p-grafico"></div>
+  </aside>
+</div>
+
+<footer id="fonti"></footer>
+
+<script src="app.js?v=2"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@
   python pipeline.py nightly    # ricalcolo percentili + build (job notturno)
 
 Aggiungere una regione = aggiungere una classe in connectors/ e una riga
-in REGISTRY qui sotto. Tutto il resto e' condiviso.
+in REGISTRY qui sotto. Tutto il resto è condiviso.
 """
 from __future__ import annotations
 
