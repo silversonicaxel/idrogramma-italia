@@ -3,6 +3,12 @@ on:
   schedule:
     - cron: "*/30 * * * *"   # nota: GitHub può ritardare alcuni minuti
   workflow_dispatch:
+  # TEMPORANEO per test: i push che toccano i workflow scattano subito.
+  # Scoped ai soli file workflow per evitare loop con i push del bot dati.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/*"
 
 permissions:
   contents: write             # commit dei dati sul repo stesso
