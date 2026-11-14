@@ -1,17 +1,17 @@
-name: harvest # scheduler re-registration nudge
+name: harvest
 on:
   schedule:
     - cron: "13,43 * * * *"   # minuti insoliti: GitHub strozza i cron su :00/:30
   workflow_dispatch:
-  # TEMPORANEO per test: i push che toccano i workflow scattano subito.
-  # Scoped ai soli file workflow per evitare loop con i push del bot dati.
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/*"
 
 permissions:
   contents: write             # commit dei dati sul repo stesso
+
+# Condiviso con nightly: un solo job alla volta scrive idrogramma.db,
+# cosi' due run non si pestano i piedi sul push.
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
 
 jobs:
   run:
@@ -34,5 +34,6 @@ jobs:
             echo "nessun dato nuovo"
           else
             git commit -m "dati $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git pull --rebase
             git push
           fi

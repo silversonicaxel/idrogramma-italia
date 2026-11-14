@@ -7,6 +7,11 @@ on:
 permissions:
   contents: write
 
+# Condiviso con harvest: un solo job alla volta scrive idrogramma.db.
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
 jobs:
   percentilei:
     runs-on: ubuntu-latest
@@ -26,5 +31,6 @@ jobs:
             echo "nessun dato nuovo"
           else
             git commit -m "percentili $(date -u '+%Y-%m-%d') UTC"
+            git pull --rebase
             git push
           fi
