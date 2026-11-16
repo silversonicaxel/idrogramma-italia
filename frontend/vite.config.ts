@@ -12,6 +12,7 @@ export default defineConfig({
         main: 'index.html',
         dati: 'dati.html',
         fonti: 'fonti.html',
+        'come-funziona': 'come-funziona.html',
       },
     },
   },
