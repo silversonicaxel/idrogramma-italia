@@ -1,8 +1,51 @@
 # Registro delle fonti dati. Documentazione + stato di abilitazione.
 # Il binding source_id -> classe Connector vive in pipeline.py:REGISTRY.
 # Il campo "portale" (URL pubblico) e "stato" alimentano la pagina /fonti.
+# Le voci "pianificata" sono fonti censite ma non ancora collegate:
+# quando una regione viene attivata si scrive il connector, si aggiorna
+# lo stato ad "attiva" e la pagina si aggiorna da sola.
 
 sources:
+  - id: abr
+    regione: Abruzzo
+    ente: Regione Abruzzo — Centro Funzionale
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionale.regione.abruzzo.it
+    note: rete idrometeo del Centro Funzionale regionale
+
+  - id: aa
+    regione: Alto Adige
+    ente: Provincia Autonoma di Bolzano
+    tipo: JSON/API (rete idrometrica provinciale)
+    stato: pianificata
+    portale: https://weather.province.bz.it/gauging-stations
+    note: stazioni di misurazione dei livelli (Adige, Isarco e bacini provinciali)
+
+  - id: bas
+    regione: Basilicata
+    ente: Centro Funzionale Decentrato Basilicata
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionale.basilicata.gov.it
+    note: rete di monitoraggio per il rischio idrogeologico e idraulico
+
+  - id: cal
+    regione: Calabria
+    ente: Centro Funzionale Multirischi Calabria
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionale.calabria.it
+    note: rete idrometeo regionale del CF multirischi
+
+  - id: cam
+    regione: Campania
+    ente: Centro Funzionale Campania
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionale.regione.campania.it
+    note: stato di allerta e rete di monitoraggio idrometeo regionale
+
   - id: er
     regione: Emilia-Romagna
     ente: Arpae / AllertaMeteo Regione ER
@@ -23,6 +66,118 @@ sources:
       come gradi decimali x100000. Incluse anche stazioni lago/diga: da filtrare.
     licenza: dati Arpae, citare la fonte
 
+  - id: fvg
+    regione: Friuli-Venezia Giulia
+    ente: ARPA FVG — Osservatorio Meteo
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.meteo.fvg.it
+    note: reti idro-meteo della Regione Autonoma Friuli-Venezia Giulia
+
+  - id: laz
+    regione: Lazio
+    ente: Ufficio Idrografico e Mareografico di Roma
+    tipo: CSV (open data CKAN)
+    stato: pianificata
+    portale: https://www.idrografico.roma.it
+    note: rete idro-termo-pluviometrica regionale, anche su dati.lazio.it
+
+  - id: lig
+    regione: Liguria
+    ente: Centro Funzionale Meteo Idrografico Liguria
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.cfmeteo.regione.liguria.it
+    note: rete di monitoraggio idrometeo (vissuta storia di eventi alluvionali)
+
+  - id: lom
+    regione: Lombardia
+    ente: ARPA Lombardia
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.arpalombardia.it
+    note: reti meteo-idro-pluviometriche regionali, dati in open data
+
+  - id: mar
+    regione: Marche
+    ente: Centro Funzionale Marche
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionale.regione.marche.it
+    note: rete idrometeo regionale del Centro Funzionale
+
+  - id: mol
+    regione: Molise
+    ente: Protezione Civile Molise — Centro Funzionale
+    tipo: da censire
+    stato: pianificata
+    portale: https://protezionecivile.regione.molise.it
+    note: rete di monitoraggio idrogeologico regionale
+
+  - id: pie
+    regione: Piemonte
+    ente: ARPA Piemonte
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.arpa.piemonte.it
+    note: reti idrometriche e pluviometriche (Sistema di Allerta regionale)
+
+  - id: pug
+    regione: Puglia
+    ente: Protezione Civile Puglia — Centro Funzionale
+    tipo: da censire
+    stato: pianificata
+    portale: https://centrofunzionalepuglia.it
+    note: rete di monitoraggio per il rischio idraulico e idrogeologico
+
+  - id: sar
+    regione: Sardegna
+    ente: Regione Sardegna — Rete Idrografica (SAR)
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.sar.sardegna.it
+    note: rete idrografica regionale, dati anche via PDND/api.gov.it
+
+  - id: sic
+    regione: Sicilia
+    ente: Osservatorio delle Acque — Regione Siciliana
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.osservatorioacque.it
+    note: rete idrografica siciliana (annali e dati in tempo reale)
+
+  - id: tos
+    regione: Toscana
+    ente: Centro Funzionale Toscana
+    tipo: da censire
+    stato: pianificata
+    portale: https://www.cfr.toscana.it
+    note: soglie idrometriche di riferimento e rete di monitoraggio regionale
+
+  - id: tre
+    regione: Trentino
+    ente: MeteoTrentino / dati.trentino.it
+    tipo: CSV (CKAN)
+    stato: pianificata
+    portale: https://dati.trentino.it/dataset/rilevamento-sensori-idrometrici-livello
+    note: rilevamento sensori idrometrici, open data provincia autonoma di Trento
+
+  - id: umb
+    regione: Umbria
+    ente: Regione Umbria — Centro Funzionale
+    tipo: CSV (open data CKAN)
+    stato: pianificata
+    portale: https://dati.regione.umbria.it
+    note: rete di monitoraggio idro-termo-pluviometrica, open data CC-BY
+
+  - id: vda
+    regione: Valle d'Aosta
+    ente: Centro Funzionale Valle d'Aosta
+    tipo: da censire
+    stato: pianificata
+    portale: https://cf.regione.vda.it
+    note: reti idrometeo della Regione Autonoma Valle d'Aosta
+
   - id: ve
     regione: Veneto
     ente: ARPAV
@@ -30,14 +185,6 @@ sources:
     stato: pianificata
     portale: https://www.arpa.veneto.it/dati-ambientali/dati-in-diretta/meteo-idro-nivo/livelloidrometrico
     note: feed open data rete idrometrica (~146 stazioni)
-
-  - id: tn
-    regione: Trentino
-    ente: MeteoTrentino / dati.trentino.it
-    tipo: CSV (CKAN)
-    stato: pianificata
-    portale: https://dati.trentino.it/dataset/rilevamento-sensori-idrometrici-livello
-    note: rilevamento sensori idrometrici, open data provincia autonoma di Trento
 
   - id: dpc
     regione: Nazionale

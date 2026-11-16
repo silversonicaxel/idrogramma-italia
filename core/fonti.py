@@ -21,6 +21,8 @@ LIVE_KEYS = ("last_run", "last_success", "last_reading_ts", "n_readings", "error
 
 def build(con: sqlite3.Connection) -> None:
     registro = yaml.safe_load(REGISTRO.read_text())["sources"]
+    # ordine alfabetico per regione (le voci nazionali seguono l'ordine di registro)
+    registro = sorted(registro, key=lambda s: s["regione"])
     health = {r["source"]: dict(r) for r in con.execute("SELECT * FROM sources_health")}
 
     fonti = []
