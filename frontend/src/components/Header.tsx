@@ -1,11 +1,12 @@
 interface HeaderProps {
-  attiva: 'mappa' | 'dati';
+  attiva: 'mappa' | 'dati' | 'fonti';
 }
 
 export default function Header({ attiva }: HeaderProps) {
   const voci = [
     { href: '/', label: 'Mappa', chiave: 'mappa' as const },
     { href: '/dati', label: 'Dati aggiornati', chiave: 'dati' as const },
+    { href: '/fonti', label: 'Fonti', chiave: 'fonti' as const },
   ];
   return (
     <header>

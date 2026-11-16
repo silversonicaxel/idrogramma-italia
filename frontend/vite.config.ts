@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         dati: 'dati.html',
+        fonti: 'fonti.html',
       },
     },
   },

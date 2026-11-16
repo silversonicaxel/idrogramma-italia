@@ -13,7 +13,7 @@ import argparse
 import sys
 
 from connectors import ErAllertaMeteo
-from core import db, percentiles, sitejson
+from core import db, fonti, percentiles, sitejson
 
 # Binding fonte -> connector. `enabled` rispecchia registry/sources.yaml.
 REGISTRY = {
@@ -48,12 +48,14 @@ def nightly() -> None:
     n = percentiles.recompute(con)
     print(f"percentili ricalcolati: {n} righe (stazione x giorno)")
     sitejson.build(con)
+    fonti.build(con)
     con.close()
 
 
 def build() -> None:
     con = db.connect()
     sitejson.build(con)
+    fonti.build(con)
     con.close()
     print("frontend/static/data/ aggiornato")
 

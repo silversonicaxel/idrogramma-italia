@@ -1,12 +1,14 @@
 # Registro delle fonti dati. Documentazione + stato di abilitazione.
 # Il binding source_id -> classe Connector vive in pipeline.py:REGISTRY.
+# Il campo "portale" (URL pubblico) e "stato" alimentano la pagina /fonti.
 
 sources:
   - id: er
     regione: Emilia-Romagna
     ente: Arpae / AllertaMeteo Regione ER
-    tipo: json
-    stato: attivo
+    tipo: JSON (telemisura 15 min)
+    stato: attiva
+    portale: https://allertameteo.regione.emilia-romagna.it/livello-idrometrico
     endpoints:
       valori_sensori: >-
         https://allertameteo.regione.emilia-romagna.it/o/api/allerta/get-sensor-values
@@ -24,27 +26,31 @@ sources:
   - id: ve
     regione: Veneto
     ente: ARPAV
-    tipo: xml
-    stato: da fare
+    tipo: XML (feed open data)
+    stato: pianificata
+    portale: https://www.arpa.veneto.it/dati-ambientali/dati-in-diretta/meteo-idro-nivo/livelloidrometrico
     note: feed open data rete idrometrica (~146 stazioni)
 
   - id: tn
     regione: Trentino
     ente: MeteoTrentino / dati.trentino.it
-    tipo: csv/ckan
-    stato: da fare
+    tipo: CSV (CKAN)
+    stato: pianificata
+    portale: https://dati.trentino.it/dataset/rilevamento-sensori-idrometrici-livello
+    note: rilevamento sensori idrometrici, open data provincia autonoma di Trento
 
   - id: dpc
-    regione: nazionale
+    regione: Nazionale
     ente: Dipartimento Protezione Civile
-    tipo: json (github)
-    stato: da fare
-    endpoints:
-      bollettini: https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica
+    tipo: JSON (bollettini criticità)
+    stato: pianificata
+    portale: https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica
+    note: bollettini di criticità idraulica e idrogeologica nazionali, 2 emissioni/giorno
 
   - id: glofas
-    regione: nazionale (baseline storica)
-    ente: Copernicus EMS
-    tipo: api
-    stato: da fare
+    regione: Nazionale (baseline storica)
+    ente: Copernicus EMS / GloFAS
+    tipo: API (rianalisi portate)
+    stato: pianificata
+    portale: https://global-flood-database.ecmwf.int
     note: rianalisi portate 1991-oggi, baseline percentili dove manca l'osservato
