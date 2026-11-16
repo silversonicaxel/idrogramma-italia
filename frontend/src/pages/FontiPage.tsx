@@ -24,15 +24,63 @@ interface Fonte {
 
 interface FontiPayload {
   generato: string;
-  fonti: Fonte[];
+  regioni: Fonte[];
+  nazionali: Fonte[];
+}
+
+function TabellaFonti({ fonti }: { fonti: Fonte[] }) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>regione</th><th>ente</th><th>tipo</th><th>stato</th>
+          <th>portale</th><th>raccolta live</th>
+        </tr>
+      </thead>
+      <tbody>
+        {fonti.map((f) => (
+          <tr key={f.id}>
+            <td>{f.regione}</td>
+            <td>
+              {f.ente}
+              {f.note && <div className="nota">{f.note}</div>}
+            </td>
+            <td>{f.tipo}</td>
+            <td>
+              {f.stato === 'attiva'
+                ? <span className="badge ok">attiva</span>
+                : <span className="badge pianificata">in arrivo</span>}
+            </td>
+            <td>
+              {f.portale && <a href={f.portale} target="_blank" rel="noreferrer">portale ↗</a>}
+            </td>
+            <td>
+              {f.live ? (
+                f.live.error
+                  ? <span className="badge errore">⚠ {f.live.error}</span>
+                  : <span className="live">
+                      ok · ultima lettura {fmtOra(f.live.last_reading_ts)}
+                    </span>
+              ) : (
+                <span className="plain">—</span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
 
 export default function FontiPage() {
-  const [fonti, setFonti] = useState<Fonte[]>([]);
+  const [regioni, setRegioni] = useState<Fonte[]>([]);
+  const [nazionali, setNazionali] = useState<Fonte[]>([]);
 
   useEffect(() => {
     (async () => {
-      setFonti(((await (await fetch('/data/fonti.json')).json()) as FontiPayload).fonti);
+      const d = (await (await fetch('/data/fonti.json')).json()) as FontiPayload;
+      setRegioni(d.regioni);
+      setNazionali(d.nazionali);
     })();
   }, []);
 
@@ -40,56 +88,25 @@ export default function FontiPage() {
     <>
       <Header attiva="fonti" />
       <main className="pagina">
-        <h2>Da dove vengono i dati</h2>
+        <h2>Regioni</h2>
         <p>
           Ogni regione ha una propria rete di monitoraggio e un proprio centro
           funzionale: Idrogramma raccoglie dai portali pubblici e li rende
           confrontabili su una sola mappa. Le fonti «in arrivo» sono già
           censite e verranno attivate una alla volta.
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>regione</th><th>ente</th><th>tipo</th><th>stato</th>
-              <th>portale</th><th>raccolta live</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fonti.map((f) => (
-              <tr key={f.id}>
-                <td>{f.regione}</td>
-                <td>
-                  {f.ente}
-                  {f.note && <div className="nota">{f.note}</div>}
-                </td>
-                <td>{f.tipo}</td>
-                <td>
-                  {f.stato === 'attiva'
-                    ? <span className="badge ok">attiva</span>
-                    : <span className="badge pianificata">in arrivo</span>}
-                </td>
-                <td>
-                  {f.portale && <a href={f.portale} target="_blank" rel="noreferrer">portale ↗</a>}
-                </td>
-                <td>
-                  {f.live ? (
-                    f.live.error
-                      ? <span className="badge errore">⚠ {f.live.error}</span>
-                      : <span className="live">
-                          ok · ultima lettura {fmtOra(f.live.last_reading_ts)}
-                        </span>
-                  ) : (
-                    <span className="plain">—</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TabellaFonti fonti={regioni} />
+
+        <h2>Nazionali</h2>
+        <p>
+          Fonti trasversali a tutte le regioni: i bollettini di criticità
+          nazionali e la baseline storica delle portate.
+        </p>
+        <TabellaFonti fonti={nazionali} />
 
         <h2>Attribuzione e licenze</h2>
         <ul className="licenze">
-          {fonti.filter((f) => f.licenza).map((f) => (
+          {[...regioni, ...nazionali].filter((f) => f.licenza).map((f) => (
             <li key={f.id}>
               <b>{f.regione}</b>: {f.licenza}
             </li>

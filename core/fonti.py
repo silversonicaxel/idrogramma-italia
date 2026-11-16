@@ -21,15 +21,14 @@ LIVE_KEYS = ("last_run", "last_success", "last_reading_ts", "n_readings", "error
 
 def build(con: sqlite3.Connection) -> None:
     registro = yaml.safe_load(REGISTRO.read_text())["sources"]
-    # ordine alfabetico per regione (le voci nazionali seguono l'ordine di registro)
+    # ordine alfabetico per regione; le voci nazionali finiscono in una tabella a parte
     registro = sorted(registro, key=lambda s: s["regione"])
     health = {r["source"]: dict(r) for r in con.execute("SELECT * FROM sources_health")}
 
-    fonti = []
-    for s in registro:
+    def scheda(s: dict) -> dict:
         h = health.get(s["id"])
         live = {k: h.get(k) for k in LIVE_KEYS} if h else None
-        fonti.append({
+        return {
             "id": s["id"],
             "regione": s["regione"],
             "ente": s["ente"],
@@ -39,12 +38,15 @@ def build(con: sqlite3.Connection) -> None:
             "note": (s.get("note") or "").strip(),
             "licenza": s.get("licenza"),
             "live": live,
-        })
+        }
+
+    regioni = [scheda(s) for s in registro if not s["regione"].startswith("Nazionale")]
+    nazionali = [scheda(s) for s in registro if s["regione"].startswith("Nazionale")]
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (Path(DATA_DIR) / "fonti.json").write_text(
         json.dumps(
-            {"generato": db.now_iso(), "fonti": fonti},
+            {"generato": db.now_iso(), "regioni": regioni, "nazionali": nazionali},
             ensure_ascii=False,
         )
     )
