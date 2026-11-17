@@ -62,7 +62,7 @@ export default function App() {
           <>
             Dati aggiornati: {fmtOra(generato)} · Fonti:{' '}
             {fonti.map((f) => `${f.source} ${f.error ? '⚠ in errore' : 'ok (ultima lettura ' + fmtOra(f.last_reading_ts) + ')'}`).join(' · ')}
-            {' '}· Dati Arpae/AllertaMeteo Regione Emilia-Romagna
+            {' '}· Dati Arpae/AllertaMeteo Regione Emilia-Romagna · ARPAV Veneto
           </>
         )}
       </footer>

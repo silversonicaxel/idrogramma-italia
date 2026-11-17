@@ -6,8 +6,9 @@ storica dello stesso periodo dell'anno. Due estremi, un solo strumento:
 
 ## Stato
 
-Scheletro funzionante: pipeline Emilia-Romagna (fonte AllertaMeteo/Arpae),
-DB SQLite, motore percentili/soglie, sito statico MapLibre + Plotly.
+Scheletro funzionante: pipeline Emilia-Romagna (AllertaMeteo/Arpae) e
+Veneto (ARPAV), DB SQLite, motore percentili/soglie, sito statico
+MapLibre + Plotly.
 
 ## Quickstart
 
@@ -44,11 +45,22 @@ Regole del progetto:
 - ogni connector ha un golden test su fixture reale in `tests/fixtures/`
   (quando il formato cambia, il test fallisce prima della pipeline).
 
-## Fonte Emilia-Romagna (attiva)
+## Fonti attive
 
-Portale AllertaMeteo Regione ER. Endpoint JSON non documentato ufficialmente
-(`registry/sources.yaml` per dettagli e note); la variabile `B13215` è il
-livello idrometrico. Dati forniti da Arpae — citare sempre la fonte.
+**Emilia-Romagna** — portale AllertaMeteo. Endpoint JSON non documentato
+ufficialmente (`registry/sources.yaml` per dettagli e note); la variabile
+`B13215` è il livello idrometrico. Dati forniti da Arpae — citare sempre
+la fonte. Il feed include stazioni lago/diga e otto stazioni fuori regione
+(Po a monte e Conca Diga), etichettate con la regione reale.
+
+**Veneto** — ARPAV, REST "dati in diretta" (JSON, ~120 stazioni LIDRO).
+Una riga per stazione con l'ultimo livello trasmesso; ora locale
+Europe/Rome convertita in UTC; livelli riferiti allo zero locale, anche
+negativi. Dati ARPAV — citare sempre la fonte.
+
+Le altre regioni sono censite in `registry/sources.yaml` con stato
+`pianificata`: aggiungerle = un connector in `connectors/` + una riga
+in `pipeline.py`.
 
 ## Deploy (futuro)
 
@@ -64,4 +76,4 @@ livello idrometrico. Dati forniti da Arpae — citare sempre la fonte.
 - [ ] classificare stazioni lago/diga vs fiume (es. "Molato Diga", "Suviana")
 - [ ] soglie di magra per-regione (le soglie 1/2/3 sono solo anti-piena)
 - [ ] baseline storica nazionale GloFAS (rianalisi Copernicus)
-- [ ] connector: Veneto (ARPAV XML), Trentino (CKAN), DPC bollettini
+- [ ] connector: Trentino (CKAN), DPC bollettini

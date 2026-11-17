@@ -63,7 +63,7 @@ export default function DatiPage() {
         <table>
           <thead>
             <tr><th>stazione</th><th className="num">livello (m)</th><th>aggiornato</th>
-              <th>stato</th><th>soglie 1/2/3 (m)</th><th>fonte</th></tr>
+              <th>stato</th><th>soglie 1/2/3 (m)</th><th>fonte</th><th>regione</th></tr>
           </thead>
           <tbody>
             {filtrate.map((s) => {
@@ -85,6 +85,7 @@ export default function DatiPage() {
                   </td>
                   <td>{(s.soglie ?? []).map((v) => (v === null ? '—' : v)).join(' / ')}</td>
                   <td>{s.source}</td>
+                  <td>{s.regione ?? '—'}</td>
                 </tr>
               );
             })}
@@ -94,7 +95,7 @@ export default function DatiPage() {
 
       <footer className="disclaimer">
         Idrogramma Italia · dati Arpae/AllertaMeteo Regione Emilia-Romagna ·
-        questo sito non è un sistema ufficiale di allerta
+        ARPAV Veneto · questo sito non è un sistema ufficiale di allerta
       </footer>
     </>
   );

@@ -69,6 +69,9 @@ sources:
       allerte), ricavato dal traffico del portale. Senza il parametro time
       (epoch ms arrotondato a 15 minuti) i value arrivano tutti null. Coordinate
       come gradi decimali x100000. Incluse anche stazioni lago/diga: da filtrare.
+      Otto stazioni sono fuori regione (Po a monte in Piemonte/Lombardia e
+      Conca Diga nelle Marche): ripubblicate da Arpae per il monitoraggio
+      delle piene, etichettate con la regione reale.
     licenza: dati Arpae, citare la fonte
 
   - id: fvg
@@ -192,10 +195,18 @@ sources:
   - id: ve
     regione: Veneto
     ente: ARPAV
-    tipo: XML (feed open data)
-    stato: pianificata
+    tipo: JSON (REST "dati in diretta")
+    stato: attiva
     portale: https://www.arpa.veneto.it/dati-ambientali/dati-in-diretta/meteo-idro-nivo/livelloidrometrico
-    note: feed open data rete idrometrica (~146 stazioni)
+    endpoints:
+      valori_sensori: https://api.arpa.veneto.it/REST/v1/meteo_meteogrammilivello
+    note: >
+      una riga per stazione con l'ultimo livello trasmesso (~120 stazioni LIDRO,
+      il censimento storico parlava di feed XML/146 stazioni: la pagina e'
+      migrata a una REST API in JSON); dataora in ora locale Europe/Rome,
+      livelli riferiti allo zero locale (spesso negativi); include anche
+      stazioni lago (es. Lago di Garda a Peschiera)
+    licenza: dati ARPAV, citare la fonte
 
   - id: dpc
     regione: Nazionale

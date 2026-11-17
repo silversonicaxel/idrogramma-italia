@@ -9,7 +9,11 @@ Dettagli scoperti sul campo:
   - coordinate come gradi decimali x100000, interi;
   - soglia = 0 significa "non definita" -> None;
   - il feed include anche stazioni lago/diga (es. "Molato Diga"): kind=incerto
-    finche' non avremo una classificazione pulita.
+    finche' non avremo una classificazione pulita;
+  - e stazioni FUORI regione: il Po a monte (Piemonte/Lombardia) che Arpae
+    ripubblica per il monitoraggio delle piene in arrivo, piu' Conca Diga
+    (Marche). Quelle in REGIONE_FUORI_ER dichiarano la regione vera; tutte
+    le altre ereditano la regione della fonte in sitejson.
 """
 from __future__ import annotations
 
@@ -27,6 +31,20 @@ SENSORS_URL = (
 VARIABILE_LIVELLO = "254,0,0/1,-,-,-/B13215"
 SLOT_SEC = 900        # griglia di trasmissione: 15 minuti
 SLOTS_BACK = 5        # guarda indietro 75' per assorbire i ritardi di rete
+
+# idstazione -> regione reale per le stazioni che Arpae ripubblica nel suo
+# feed ma stanno fuori Emilia-Romagna (corridoio del Po a monte + Conca Diga).
+# Se Arpae ne aggiunge altre, basta una riga qui: il golden test le verifica.
+REGIONE_FUORI_ER = {
+    "3959": "Piemonte",        # Carignano Po
+    "5403": "Piemonte",        # Casale Monferrato Po
+    "5421": "Piemonte",        # Ponte Valenza Po
+    "5386": "Piemonte",        # Isola S.Antonio PO
+    "12753": "Lombardia",      # Casei Gerola Po
+    "12815": "Lombardia",      # Ponte Becca Po
+    "12850": "Lombardia",      # Spessa Po
+    "53072": "Marche",         # Conca Diga
+}
 
 
 def _slot_epoch_ms(back: int = 0) -> int:
@@ -67,6 +85,7 @@ class ErAllertaMeteo(Connector):
                         lat=int(raw["lat"]) / 100_000,
                         lon=int(raw["lon"]) / 100_000,
                         kind="incerto",
+                        regione=REGIONE_FUORI_ER.get(sid),
                         soglia1=raw.get("soglia1") or None,
                         soglia2=raw.get("soglia2") or None,
                         soglia3=raw.get("soglia3") or None,

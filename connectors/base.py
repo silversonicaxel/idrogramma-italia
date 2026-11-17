@@ -19,6 +19,7 @@ class Station:
     lat: float
     lon: float
     kind: str = "fiume"                     # fiume | lago_diga | incerto
+    regione: str | None = None              # solo se diversa dalla fonte
     soglia1: float | None = None            # soglie anti-piena regionali, m
     soglia2: float | None = None
     soglia3: float | None = None

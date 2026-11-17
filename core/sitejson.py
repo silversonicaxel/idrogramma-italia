@@ -6,16 +6,27 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import yaml
+
 from .status import classify_percentile, classify_soglie
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "frontend" / "static" / "data"
+REGISTRO = ROOT / "registry" / "sources.yaml"
 SERIES_DAYS = 7
+
+
+def _regione_fonti() -> dict[str, str]:
+    """source_id -> regione della fonte: il default per le stazioni che non
+    dichiarano una regione propria (es. Po a monte ripubblicato da Arpae)."""
+    registro = yaml.safe_load(REGISTRO.read_text())["sources"]
+    return {s["id"]: s["regione"] for s in registro}
 
 
 def build(con: sqlite3.Connection) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc)
+    regione_fonti = _regione_fonti()
 
     doy = now.timetuple().tm_yday
     pct_by_station = {
@@ -64,6 +75,7 @@ def build(con: sqlite3.Connection) -> None:
             "id": st["station_id"],
             "nome": st["name"],
             "kind": st["kind"],
+            "regione": st["regione"] or regione_fonti.get(st["source"]),
             "lat": st["lat"],
             "lon": st["lon"],
             "livello_m": level,

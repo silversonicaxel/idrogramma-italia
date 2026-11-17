@@ -28,6 +28,9 @@ export interface Station {
   id: string;
   nome: string;
   kind: string;
+  /** regione della stazione: quasi sempre quella della fonte, diversa solo
+   *  per le stazioni ripubblicate da altre regioni (es. Po a monte) */
+  regione: string | null;
   lat: number;
   lon: number;
   livello_m: number | null;

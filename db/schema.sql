@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS stations (
   lat        REAL NOT NULL,
   lon        REAL NOT NULL,
   kind       TEXT DEFAULT 'fiume',           -- fiume | lago_diga | incerto
+  regione    TEXT,                           -- NULL = regione della fonte
   PRIMARY KEY (source, station_id)
 );
 

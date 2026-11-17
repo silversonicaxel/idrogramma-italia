@@ -6,7 +6,7 @@ aggiornare la fixture con cura e verificare cosa cambia davvero.
 import json
 from pathlib import Path
 
-from connectors.er_allertameteo import ErAllertaMeteo
+from connectors.er_allertameteo import ErAllertaMeteo, REGIONE_FUORI_ER
 
 FIXTURE = Path(__file__).parent / "fixtures" / "er_get_sensor_values.json"
 
@@ -39,3 +39,13 @@ def test_soglia_zero_diventa_none():
     # alcune stazioni nel feed hanno soglia 0 = non definita -> None
     assert any(s.soglia1 is None for s in h.stations)
     assert any(s.soglia2 is not None and s.soglia2 > 0 for s in h.stations)
+
+
+def test_stazioni_fuori_regione():
+    _, h = _harvest_da_fixture()
+    fuori = {s.station_id: s.regione for s in h.stations if s.regione}
+    assert fuori == REGIONE_FUORI_ER
+    # tutte le altre ereditano la regione della fonte (Emilia-Romagna) in sitejson
+    assert all(s.regione is None for s in h.stations if s.station_id not in fuori)
+    # sanity: il mapping resta ancorato alla fixture (id che non esistono piu')
+    assert len(fuori) == 8

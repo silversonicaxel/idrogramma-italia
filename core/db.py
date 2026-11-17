@@ -20,17 +20,27 @@ def connect(path: Path = DB_PATH) -> sqlite3.Connection:
     con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA_PATH.read_text())
+    _migra(con)
     return con
+
+
+def _migra(con: sqlite3.Connection) -> None:
+    """Migrazioni per i DB già esistenti: CREATE IF NOT EXISTS non tocca
+    le tabelle create prima che una colonna entrasse nello schema."""
+    colonne = {r[1] for r in con.execute("PRAGMA table_info(stations)")}
+    if "regione" not in colonne:
+        con.execute("ALTER TABLE stations ADD COLUMN regione TEXT")
+        con.commit()
 
 
 def save_harvest(con: sqlite3.Connection, harvest: Harvest) -> int:
     """Scrive stazioni, soglie e letture. Ritorna il n. di letture nuove."""
     con.executemany(
-        """INSERT INTO stations (source, station_id, name, lat, lon, kind)
-           VALUES (:source, :station_id, :name, :lat, :lon, :kind)
+        """INSERT INTO stations (source, station_id, name, lat, lon, kind, regione)
+           VALUES (:source, :station_id, :name, :lat, :lon, :kind, :regione)
            ON CONFLICT(source, station_id) DO UPDATE SET
              name=excluded.name, lat=excluded.lat, lon=excluded.lon,
-             kind=excluded.kind""",
+             kind=excluded.kind, regione=excluded.regione""",
         [s.__dict__ for s in harvest.stations],
     )
 
