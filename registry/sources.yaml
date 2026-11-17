@@ -72,7 +72,10 @@ sources:
       Otto stazioni sono fuori regione (Po a monte in Piemonte/Lombardia e
       Conca Diga nelle Marche): ripubblicate da Arpae per il monitoraggio
       delle piene, etichettate con la regione reale.
-    licenza: dati Arpae, citare la fonte
+    licenza: >-
+      Fonte: Arpae — portale AllertaMeteo Regione Emilia-Romagna
+      (allertameteo.regione.emilia-romagna.it); licenza non dichiarata
+      per questo endpoint
 
   - id: fvg
     regione: Friuli-Venezia Giulia
@@ -206,7 +209,8 @@ sources:
       migrata a una REST API in JSON); dataora in ora locale Europe/Rome,
       livelli riferiti allo zero locale (spesso negativi); include anche
       stazioni lago (es. Lago di Garda a Peschiera)
-    licenza: dati ARPAV, citare la fonte
+    licenza: >-
+      CC BY 4.0 Italia — Fonte: ARPAV, arpa.veneto.it (nota legale del sito)
 
   - id: dpc
     regione: Nazionale
