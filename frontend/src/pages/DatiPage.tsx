@@ -74,12 +74,14 @@ export default function DatiPage() {
                   <td className="num">{fmtLivello(s.livello_m)}</td>
                   <td>{fmtOra(s.ts)}</td>
                   <td>
-                    {!c && s.livello_m == null
-                      ? <span className="plain">senza dati recenti</span>
-                      : c
-                        ? <span className="badge" style={{ background: COLORI[c] }}>{ETICHETTE[c] || c}</span>
-                        : <span className="badge" style={{ background: '#7f8c8d' }}>nessuna allerta</span>}
-                    {sottoZero(s) && <span className="badge errore">sotto lo zero</span>}
+                    <div className="badges">
+                      {!c && s.livello_m == null
+                        ? <span className="plain">senza dati recenti</span>
+                        : c
+                          ? <span className="badge" style={{ background: COLORI[c] }}>{ETICHETTE[c] || c}</span>
+                          : <span className="badge" style={{ background: '#7f8c8d' }}>nessuna allerta</span>}
+                      {sottoZero(s) && <span className="badge errore">sotto lo zero</span>}
+                    </div>
                   </td>
                   <td>{(s.soglie ?? []).map((v) => (v === null ? '—' : v)).join(' / ')}</td>
                   <td>{s.source}</td>

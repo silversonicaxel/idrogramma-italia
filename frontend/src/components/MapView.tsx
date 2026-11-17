@@ -38,14 +38,17 @@ export default function MapView({ stazioni, onSelect, onLegendToggle }: Props) {
         btn.type = 'button';
         btn.title = 'Legenda';
         btn.setAttribute('aria-label', 'Legenda');
+        btn.className = 'ctrl-legenda';
+        // contenuto centrato nel viewBox (x 1.75–18, y 2.25–17.75); pallini
+        // r=2.25 a passo 5.5 per non sovrapporsi; barre #333 come le icone zoom
         btn.innerHTML =
           '<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">' +
-          '<circle cx="5" cy="5" r="3" fill="#b2182b"/>' +
-          '<circle cx="5" cy="10" r="3" fill="#66c2a5"/>' +
-          '<circle cx="5" cy="15" r="3" fill="#2166ac"/>' +
-          '<rect x="10" y="3.5" width="8" height="3" rx="1.5" fill="#666"/>' +
-          '<rect x="10" y="8.5" width="8" height="3" rx="1.5" fill="#666"/>' +
-          '<rect x="10" y="13.5" width="8" height="3" rx="1.5" fill="#666"/></svg>';
+          '<circle cx="4" cy="4.5" r="2.25" fill="#b2182b"/>' +
+          '<circle cx="4" cy="10" r="2.25" fill="#66c2a5"/>' +
+          '<circle cx="4" cy="15.5" r="2.25" fill="#2166ac"/>' +
+          '<rect x="9" y="3.25" width="9" height="2.5" rx="1.25" fill="#333"/>' +
+          '<rect x="9" y="8.75" width="9" height="2.5" rx="1.25" fill="#333"/>' +
+          '<rect x="9" y="14.25" width="9" height="2.5" rx="1.25" fill="#333"/></svg>';
         btn.onclick = onLegendToggle;
         container.appendChild(btn);
         return container;

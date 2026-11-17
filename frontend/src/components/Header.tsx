@@ -16,7 +16,14 @@ export default function Header({ attiva }: HeaderProps) {
         <p>lo stato dei fiumi italiani — livello di oggi vs storia dello stesso periodo</p>
       </div>
       <details className="menu">
-        <summary aria-label="menu">☰</summary>
+        <summary aria-label="Menu">
+          {/* tre tacche di lunghezza diversa, come un idrometro; aperto diventa una X */}
+          <span className="burger" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+        </summary>
         <nav>
           {voci.map((v) => (
             <a key={v.chiave} href={v.href} aria-current={attiva === v.chiave ? 'page' : undefined}>
