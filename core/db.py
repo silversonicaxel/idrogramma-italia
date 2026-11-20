@@ -66,6 +66,27 @@ def save_harvest(con: sqlite3.Connection, harvest: Harvest) -> int:
     return after - before
 
 
+def insert_letture(
+    con: sqlite3.Connection, source: str, letture: list[tuple[str, str, float]]
+) -> int:
+    """Inserisce letture in blocco con INSERT OR IGNORE (idempotente).
+
+    letture: lista di tuple (station_id, ts_iso_utc, level_m). Helper
+    condiviso dei catch-up dei connector: chi ha una serie storica nella
+    fonte la analizza e passa qui le tuple — la scrittura è identica per
+    tutte le regioni. Ritorna quante letture sono state davvero inserite
+    (quelle con timestamp nuovi). La commit è a carico del chiamante.
+    """
+    prima = con.execute("SELECT COUNT(*) FROM readings").fetchone()[0]
+    con.executemany(
+        """INSERT OR IGNORE INTO readings (source, station_id, ts, level_m)
+           VALUES (?, ?, ?, ?)""",
+        [(source, sid, ts, livello) for sid, ts, livello in letture],
+    )
+    dopo = con.execute("SELECT COUNT(*) FROM readings").fetchone()[0]
+    return dopo - prima
+
+
 def save_health(
     con: sqlite3.Connection,
     source_id: str,

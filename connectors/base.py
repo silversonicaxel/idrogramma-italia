@@ -9,6 +9,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
+from sqlite3 import Connection
 
 
 @dataclass
@@ -48,3 +49,14 @@ class Connector(ABC):
     @abstractmethod
     def harvest(self) -> Harvest:
         """Scarica e restituisce stazioni + letture recenti nello schema canonico."""
+
+    def catch_up(self, con: Connection) -> int:
+        """Backfill opzionale delle serie storiche esposte dalla fonte.
+
+        Override SOLO se l'API regionale espone una serie storica
+        (es. ER: get-time-series ~70h). Il metodo analizza il formato
+        della fonte e scrive via db.insert_letture() — la scrittura è
+        identica per tutte le regioni. Il default 0 significa
+        «feed snapshot-only: nessun archivio recuperabile» (es. ARPAV).
+        """
+        return 0

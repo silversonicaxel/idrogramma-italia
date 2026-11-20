@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 
 import requests
 
+from core import db
 from .base import Connector, Harvest, Reading, Station
 
 SENSORS_URL = (
@@ -118,11 +119,11 @@ class ErAllertaMeteo(Connector):
         che cadono nel momento giusto: i sensori che trasmettono raramente
         (es. montagna) vengono catturati sparsamente, con buchi di ore. Il
         backend conserva comunque la serie completa a 15 minuti: questa
-        passata (notturna) la riversa nel db con INSERT OR IGNORE, riempiendo
-        i buchi. Ritorna il numero di letture nuove inserite.
+        passata (notturna) la riversa nel db riempiendo i buchi. Ritorna il
+        numero di letture nuove inserite.
         """
         ids = [r[0] for r in con.execute("SELECT station_id FROM stations WHERE source='er'")]
-        inserite = 0
+        letture: list[tuple[str, str, float]] = []
         errori = 0
         for sid in ids:
             try:
@@ -139,14 +140,11 @@ class ErAllertaMeteo(Connector):
                     ts = datetime.fromtimestamp(
                         int(punto["t"]) / 1000, tz=timezone.utc
                     ).strftime("%Y-%m-%dT%H:%M:%SZ")
-                    cur = con.execute(
-                        "INSERT OR IGNORE INTO readings (source, station_id, ts, level_m) "
-                        "VALUES ('er', ?, ?, ?)",
-                        (sid, ts, float(livello)),
-                    )
-                    inserite += cur.rowcount
+                    letture.append((sid, ts, float(livello)))
             except Exception:
                 errori += 1
         if errori:
             print(f"catch_up er: {errori} stazioni con errori (saltate)")
+        inserite = db.insert_letture(con, self.source_id, letture)
+        con.commit()
         return inserite

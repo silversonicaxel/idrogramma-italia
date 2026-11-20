@@ -47,14 +47,15 @@ def harvest() -> int:
 def nightly() -> None:
     con = db.connect()
 
-    # catch-up ER: il time-series API restituisce la serie densa (15 min)
-    # delle ultime ~70h — riempie i buchi lasciati dal campionamento a slot
-    er = ErAllertaMeteo()
-    try:
-        recuperate = er.catch_up(con)
-        print(f"catch-up er: {recuperate} letture recuperate dal time-series")
-    except Exception as exc:
-        print(f"catch-up er ERRORE: {exc}", file=sys.stderr)
+    # catch-up: ogni connector con archivio storico recupera la serie densa
+    # (default base = 0 per le fonti snapshot-only, es. ARPAV)
+    for source_id in ENABLED:
+        try:
+            recuperate = REGISTRY[source_id]().catch_up(con)
+            if recuperate:
+                print(f"catch-up {source_id}: {recuperate} letture recuperate")
+        except Exception as exc:
+            print(f"catch-up {source_id} ERRORE: {exc}", file=sys.stderr)
 
     n = percentiles.recompute(con)
     print(f"percentili ricalcolati: {n} righe (stazione x giorno)")
