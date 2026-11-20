@@ -12,15 +12,16 @@ from __future__ import annotations
 import argparse
 import sys
 
-from connectors import ErAllertaMeteo, VeArpav
+from connectors import ErAllertaMeteo, TosSir, VeArpav
 from core import db, fonti, percentiles, sitejson
 
 # Binding fonte -> connector. `enabled` rispecchia registry/sources.yaml.
 REGISTRY = {
     "er": ErAllertaMeteo,
     "ve": VeArpav,
+    "tos": TosSir,
 }
-ENABLED = ["er", "ve"]
+ENABLED = ["er", "ve", "tos"]
 
 
 def harvest() -> int:

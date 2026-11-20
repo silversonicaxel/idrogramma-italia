@@ -165,11 +165,14 @@ sources:
 
   - id: tos
     regione: Toscana
-    ente: Centro Funzionale Toscana
-    tipo: in studio
-    stato: pianificata
-    portale: https://www.cfr.toscana.it
-    note: soglie idrometriche di riferimento e rete di monitoraggio regionale (URL verificato)
+    ente: SIR Toscana / Centro Funzionale Toscana
+    tipo: JSON (SIR, chiamata per stazione)
+    stato: attiva
+    portale: https://www.sir.toscana.it/idrometria-pub
+    note: >
+      rete idrometrica del SIR (~195 stazioni idro); le soglie idrometriche
+      di riferimento 1 e 2 del CFR non sono esposte dall'API (documenti PDF
+      del CFR), da integrare eventualmente in futuro (URL verificato)
 
   - id: tre
     regione: Trentino
