@@ -46,6 +46,16 @@ def harvest() -> int:
 
 def nightly() -> None:
     con = db.connect()
+
+    # catch-up ER: il time-series API restituisce la serie densa (15 min)
+    # delle ultime ~70h — riempie i buchi lasciati dal campionamento a slot
+    er = ErAllertaMeteo()
+    try:
+        recuperate = er.catch_up(con)
+        print(f"catch-up er: {recuperate} letture recuperate dal time-series")
+    except Exception as exc:
+        print(f"catch-up er ERRORE: {exc}", file=sys.stderr)
+
     n = percentiles.recompute(con)
     print(f"percentili ricalcolati: {n} righe (stazione x giorno)")
     sitejson.build(con)

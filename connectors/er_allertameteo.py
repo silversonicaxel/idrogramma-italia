@@ -17,6 +17,7 @@ Dettagli scoperti sul campo:
 """
 from __future__ import annotations
 
+import sqlite3
 import time
 from datetime import datetime, timezone
 
@@ -27,6 +28,10 @@ from .base import Connector, Harvest, Reading, Station
 SENSORS_URL = (
     "https://allertameteo.regione.emilia-romagna.it"
     "/o/api/allerta/get-sensor-values"
+)
+TIME_SERIES_URL = (
+    "https://allertameteo.regione.emilia-romagna.it"
+    "/o/api/allerta/get-time-series/"
 )
 VARIABILE_LIVELLO = "254,0,0/1,-,-,-/B13215"
 SLOT_SEC = 900        # griglia di trasmissione: 15 minuti
@@ -105,3 +110,43 @@ class ErAllertaMeteo(Connector):
             readings=list(latest.values()),
             notes=f"{SLOTS_BACK} slot interrogati",
         )
+
+    def catch_up(self, con: sqlite3.Connection) -> int:
+        """Recupera dal time-series API la serie densa (15 min) delle ultime ~70h.
+
+        Il feed dei valori correnti (sondaggio su 75') vede solo le trasmissioni
+        che cadono nel momento giusto: i sensori che trasmettono raramente
+        (es. montagna) vengono catturati sparsamente, con buchi di ore. Il
+        backend conserva comunque la serie completa a 15 minuti: questa
+        passata (notturna) la riversa nel db con INSERT OR IGNORE, riempiendo
+        i buchi. Ritorna il numero di letture nuove inserite.
+        """
+        ids = [r[0] for r in con.execute("SELECT station_id FROM stations WHERE source='er'")]
+        inserite = 0
+        errori = 0
+        for sid in ids:
+            try:
+                resp = self.session.get(
+                    TIME_SERIES_URL,
+                    params={"stazione": sid, "variabile": VARIABILE_LIVELLO},
+                    timeout=30,
+                )
+                resp.raise_for_status()
+                for punto in resp.json():
+                    livello = punto.get("v")
+                    if livello is None:
+                        continue
+                    ts = datetime.fromtimestamp(
+                        int(punto["t"]) / 1000, tz=timezone.utc
+                    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+                    cur = con.execute(
+                        "INSERT OR IGNORE INTO readings (source, station_id, ts, level_m) "
+                        "VALUES ('er', ?, ?, ?)",
+                        (sid, ts, float(livello)),
+                    )
+                    inserite += cur.rowcount
+            except Exception:
+                errori += 1
+        if errori:
+            print(f"catch_up er: {errori} stazioni con errori (saltate)")
+        return inserite
