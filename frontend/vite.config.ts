@@ -13,6 +13,7 @@ export default defineConfig({
         dati: 'dati.html',
         fonti: 'fonti.html',
         'come-funziona': 'come-funziona.html',
+        'chi-siamo': 'chi-siamo.html',
       },
     },
   },

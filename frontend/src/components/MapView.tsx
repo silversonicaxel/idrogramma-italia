@@ -9,9 +9,11 @@ interface Props {
   stazioni: Station[];
   onSelect: (s: Station) => void;
   onLegendToggle: () => void;
+  /** ?stazione=er:12765 dall'URL: al load centra la vista sulla stazione */
+  urlStazione?: string | null;
 }
 
-export default function MapView({ stazioni, onSelect, onLegendToggle }: Props) {
+export default function MapView({ stazioni, onSelect, onLegendToggle, urlStazione }: Props) {
   const mapDiv = useRef<HTMLDivElement | null>(null);
 
   // la mappa nasce solo quando i dati sono pronti: source e layer vengono
@@ -26,6 +28,12 @@ export default function MapView({ stazioni, onSelect, onLegendToggle }: Props) {
       zoom: 7.5,
     });
     window.__map = map; // handle per test/debug (project, queryRenderedFeatures)
+
+    // arrivo da /dati o da un link condiviso: centro la vista sulla stazione
+    if (urlStazione) {
+      const s = stazioni.find((x) => `${x.source}:${x.id}` === urlStazione);
+      if (s) map.jumpTo({ center: [s.lon, s.lat], zoom: 9.5 });
+    }
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
 
@@ -104,7 +112,7 @@ export default function MapView({ stazioni, onSelect, onLegendToggle }: Props) {
     });
 
     return () => map.remove();
-  }, [stazioni, onSelect, onLegendToggle]);
+  }, [stazioni, onSelect, onLegendToggle, urlStazione]);
 
   return <div id="mappa" ref={mapDiv} />;
 }

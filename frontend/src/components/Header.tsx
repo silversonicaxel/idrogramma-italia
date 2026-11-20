@@ -1,5 +1,5 @@
 interface HeaderProps {
-  attiva: 'mappa' | 'dati' | 'fonti' | 'come-funziona';
+  attiva: 'mappa' | 'dati' | 'fonti' | 'come-funziona' | 'chi-siamo';
 }
 
 export default function Header({ attiva }: HeaderProps) {
@@ -8,6 +8,7 @@ export default function Header({ attiva }: HeaderProps) {
     { href: '/dati', label: 'Dati aggiornati', chiave: 'dati' as const },
     { href: '/fonti', label: 'Fonti', chiave: 'fonti' as const },
     { href: '/come-funziona', label: 'Come funziona', chiave: 'come-funziona' as const },
+    { href: '/chi-siamo', label: 'Chi siamo', chiave: 'chi-siamo' as const },
   ];
   return (
     <header>

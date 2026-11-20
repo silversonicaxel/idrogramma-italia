@@ -70,7 +70,11 @@ export default function DatiPage() {
               const c = (s.classe_soglie || s.classe) as Classe | undefined;
               return (
                 <tr key={s.source + ':' + s.id}>
-                  <td>{s.nome}</td>
+                  <td>
+                    <a href={`/?stazione=${s.source}:${s.id}`} title="vedi sulla mappa">
+                      {s.nome}
+                    </a>
+                  </td>
                   <td className="num">{fmtLivello(s.livello_m)}</td>
                   <td>{fmtOra(s.ts)}</td>
                   <td>

@@ -11,6 +11,10 @@ export default function App() {
   const [generato, setGenerato] = useState<string | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
   const [selected, setSelected] = useState<Station | null>(null);
+  // ?stazione=er:12765 in URL -> selezione automatica all'avvio (da /dati o condiviso)
+  const [urlStazione] = useState(() =>
+    new URLSearchParams(window.location.search).get('stazione')
+  );
 
   useEffect(() => {
     (async () => {
@@ -22,18 +26,36 @@ export default function App() {
       setStazioni(d.stazioni);
       setGenerato(d.generato);
       setFonti((await b.json()) as SourceHealth[]);
+      if (urlStazione) {
+        const s = d.stazioni.find((x) => `${x.source}:${x.id}` === urlStazione);
+        if (s) setSelected(s);
+      }
     })();
-  }, []);
+  }, [urlStazione]);
+
+  // l'URL segue la selezione: il pannello aperto è condivisibile
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (selected) url.searchParams.set('stazione', `${selected.source}:${selected.id}`);
+    else url.searchParams.delete('stazione');
+    window.history.replaceState({}, '', url.toString());
+  }, [selected]);
 
   // callback stabili: senza loro MapView ricreerebbe la mappa a ogni render
   const onSelect = useCallback((s: Station) => setSelected(s), []);
   const onLegendToggle = useCallback(() => setLegendOpen((o) => !o), []);
+  const onCloseSelected = useCallback(() => setSelected(null), []);
 
   return (
     <>
       <Header attiva="mappa" />
       <div className="map-wrap">
-        <MapView stazioni={stazioni} onSelect={onSelect} onLegendToggle={onLegendToggle} />
+        <MapView
+          stazioni={stazioni}
+          onSelect={onSelect}
+          onLegendToggle={onLegendToggle}
+          urlStazione={urlStazione}
+        />
 
         <div id="legenda" className={legendOpen ? 'aperta' : ''}>
           <span className="gruppo" title="il livello di oggi confrontato con i livelli degli stessi giorni degli ultimi 20-30 anni. Attivo dopo il caricamento dello storico.">rispetto agli anni scorsi (stesso periodo):</span>
@@ -54,7 +76,7 @@ export default function App() {
           <span title="livello negativo: più basso del riferimento fisso della stazione — secca oggettiva, visibile già oggi senza storico"><i className="anello" />sotto lo zero idrometrico</span>
         </div>
 
-        {selected && <StationPanel station={selected} onClose={() => setSelected(null)} />}
+        {selected && <StationPanel station={selected} onClose={onCloseSelected} />}
       </div>
 
       <footer id="fonti">
