@@ -12,20 +12,27 @@ from __future__ import annotations
 import argparse
 import sys
 
-from connectors import ErAllertaMeteo, VeArpav
+from connectors import ErAllertaMeteo, TosSir, VeArpav
 from core import db, fonti, percentiles, sitejson
 
 # Binding fonte -> connector. `enabled` rispecchia registry/sources.yaml.
 REGISTRY = {
     "er": ErAllertaMeteo,
     "ve": VeArpav,
+    "tos": TosSir,
 }
-ENABLED = ["er", "ve"]
+ENABLED = ["er", "ve", "tos"]
 
 
-def harvest() -> int:
+def harvest() -> None:
+    """Raccoglie da tutte le fonti in ENABLED.
+
+    Una fonte che fallisce NON fa uscire la pipeline con errore: l'errore è
+    registrato in sources_health (visibile sul sito nel footer e in /dati)
+    e le altre regioni continuano. Exit code 1 ucciderebbe lo step di
+    commit di GitHub Actions, facendo perdere i dati delle altre regioni.
+    """
     con = db.connect()
-    exit_code = 0
     for source_id in ENABLED:
         connector = REGISTRY[source_id]()
         try:
@@ -39,9 +46,7 @@ def harvest() -> int:
         except Exception as exc:  # la fonte non deve mai fermare le altre
             db.save_health(con, source_id, ok=False, error=str(exc)[:500])
             print(f"[{source_id}] ERRORE: {exc}", file=sys.stderr)
-            exit_code = 1
     con.close()
-    return exit_code
 
 
 def nightly() -> None:
@@ -83,9 +88,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.command == "harvest":
         # il sito va aggiornato comunque: mostra anche lo stato "fonte in errore"
-        code = harvest()
+        harvest()
         build()
-        sys.exit(code)
     elif args.command == "nightly":
         nightly()
     else:
