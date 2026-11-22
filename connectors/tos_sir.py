@@ -39,14 +39,21 @@ class TosSir(Connector):
         self.session = session or requests.Session()
 
     def harvest(self) -> Harvest:
-        resp = self.session.get(
-            FEED_URL, params={"action": "list", "type_gauge": "idro"}, timeout=30
-        )
+        resp = None
+        for attesa in (0, 15, 30, 45, 60):  # list e' l'endpoint piu' limitato
+            if attesa:
+                time.sleep(attesa)
+            resp = self.session.get(
+                FEED_URL, params={"action": "list", "type_gauge": "idro"}, timeout=30
+            )
+            if resp.status_code != 429:
+                break
         resp.raise_for_status()
         feats = resp.json()["features"]
 
         stations: list[Station] = []
         readings: list[Reading] = []
+        errori = 0
         for feat in feats:
             sid = feat["IDStazione"]
             stations.append(
@@ -60,19 +67,25 @@ class TosSir(Connector):
                 )
             )
 
-            # una chiamata per stazione: l'elenco non porta i valori
+            # una chiamata per stazione: l'elenco non porta i valori.
+            # try/except PER STAZIONE: un 429 persistente salta la stazione
+            # ma non abortisce il harvest (il salvataggio e' a fine giro)
             time.sleep(PAUSA_SEC)
-            det = None
-            for attesa in (0, 15, 30, 45):  # rate limiting: backoff progressivo
-                if attesa:
-                    time.sleep(attesa)
-                det = self.session.get(
-                    FEED_URL, params={"action": "station", "id": sid}, timeout=30
-                )
-                if det.status_code != 429:
-                    break
-            det.raise_for_status()
-            idro = det.json().get("idro")
+            try:
+                det = None
+                for attesa in (0, 15, 30, 45):  # rate limiting: backoff progressivo
+                    if attesa:
+                        time.sleep(attesa)
+                    det = self.session.get(
+                        FEED_URL, params={"action": "station", "id": sid}, timeout=30
+                    )
+                    if det.status_code != 429:
+                        break
+                det.raise_for_status()
+                idro = det.json().get("idro")
+            except Exception:
+                errori += 1
+                continue
             if not idro or idro.get("value") in (None, "", "-"):
                 continue
             ts = datetime.strptime(idro["date"], "%d/%m/%Y %H:%M:%S").replace(
@@ -87,8 +100,10 @@ class TosSir(Connector):
                 )
             )
 
+        if errori:
+            print(f"tos: {errori} stazioni saltate per errori (rate limit o rete)")
         return Harvest(
             stations=stations,
             readings=readings,
-            notes=f"{len(feats)} stazioni idrometriche SIR",
+            notes=f"{len(feats)} stazioni idrometriche SIR, {errori} errori",
         )
