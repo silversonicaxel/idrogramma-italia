@@ -69,6 +69,36 @@ in `pipeline.py`.
 2. Cloudflare free: Pages (hosting statico) + D1 (DB in produzione).
 3. Fase 3: bot Telegram per le allerte. Dominio: idrogramma.it (libero a nov 2026).
 
+## Roadmap (in ordine di priorita')
+
+1. **Harvest Toscana locale** — l'API SIR blocca gli IP datacenter (429 su
+   GitHub Actions): job locale sul Mac (launchd/cron, orario) + push. Il
+   connector e' pronto, manca solo il job.
+2. **Backfill storici** — Dext3r per l'ER e archivi open-data ARPAV per il
+   Veneto: accendono i percentili storici, la feature unica del sito.
+3. **Soglie ARPAV** — indagine sull'API/app "Fiumi Veneto" o richiesta al
+   CFD Veneto: porta l'allerta piena sulle 120 stazioni venete.
+4. **Giorno idrologico su fuso Roma** (i percentili ora usano il giorno UTC).
+5. **Classificare stazioni lago/diga vs fiume** (Suviana, Ridracoli,
+   Molato Diga... leggono quote d'invaso su scale diverse).
+6. **Gestione crescita del db** (~10 MB/giorno): retention raw >2 anni con
+   medie giornaliere; migrazione su Cloudflare D1 al go-live.
+7. **Nuove regioni** — una alla volta, priorita' alle API documentate e
+   permissive (Lombardia ARPA Socrata, Liguria CFMeteo, Umbria CKAN);
+   quelle che bloccano gli IP datacenter seguiranno il modello Toscana
+   (harvest locale).
+8. **Go-live Cloudflare** — Pages + D1 + cron esterno deterministico
+   (sostituisce lo scheduler GitHub, che drifta di ore).
+9. **Bot Telegram** per le allerte.
+
+
+## Deploy (futuro)
+
+1. Repo GitHub **pubblico** (Actions illimitato) → workflow `harvest` (30 min)
+   e `nightly` (percentili) già presenti in `.github/workflows/`.
+2. Cloudflare free: Pages (hosting statico) + D1 (DB in produzione).
+3. Fase 3: bot Telegram per le allerte. Dominio: idrogramma.it (libero a nov 2026).
+
 ## Roadmap
 
 - [ ] backfill storico ER (export Dext3r, CSV) → percentili reali
