@@ -69,6 +69,13 @@ in `pipeline.py`.
 2. Cloudflare free: Pages (hosting statico) + D1 (DB in produzione).
 3. Fase 3: bot Telegram per le allerte. Dominio: idrogramma.it (libero a nov 2026).
 
+## Attribuzione dati
+
+- **Emilia-Romagna**: dati Arpae / AllertaMeteo Regione ER — citare la fonte
+- **Veneto**: dati ARPAV (CC BY 4.0) — citare la fonte
+- **Toscana**: dati Regione Toscana / SIR — citare la fonte
+- Bollettini di criticità nazionali: Protezione Civile (DPC)
+
 ## Roadmap
 
 - [ ] backfill storico ER (export Dext3r, CSV) → percentili reali

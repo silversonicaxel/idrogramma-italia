@@ -169,6 +169,7 @@ sources:
     tipo: JSON (SIR, chiamata per stazione)
     stato: attiva
     portale: https://www.sir.toscana.it/idrometria-pub
+    licenza: "Fonte: Regione Toscana — SIR (sir.toscana.it); licenza non dichiarata per questo endpoint, citare la fonte"
     note: >
       rete idrometrica del SIR (~195 stazioni idro); le soglie idrometriche
       di riferimento 1 e 2 del CFR non sono esposte dall'API (documenti PDF
