@@ -80,6 +80,11 @@ in `pipeline.py`.
    connector è pronto, manca solo il job.
 2. **Backfill storici** — Dext3r per l'ER e archivi open-data ARPAV per il
    Veneto: accendono i percentili storici, la feature unica del sito.
+   NOTA (2026-11-23): AllertaMeteo serve solo ~56h di serie (verificato:
+   date ignorate da get-time-series, il portale grafici non incorpora
+   storia) e i domini Dext3r (simc.arpaer.it e varianti) non rispondono
+   dalla nostra rete — l'indagine serve da browser/rete diversa, oppure
+   richiesta formale ad Arpae (accesso ai dati ambientali).
 3. **Soglie ARPAV** — indagine sull'API/app "Fiumi Veneto" o richiesta al
    CFD Veneto: porta l'allerta piena sulle 120 stazioni venete.
 4. **Giorno idrologico su fuso Roma** (i percentili ora usano il giorno UTC).
